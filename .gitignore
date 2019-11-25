@@ -1,0 +1,5 @@
+*.mxproject
+*.ioc
+*.code-workspace
+\.vscode
+\build
