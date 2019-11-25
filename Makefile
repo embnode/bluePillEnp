@@ -30,7 +30,6 @@ include $(ROOT)/make/tool.mk
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
 USB_DEVICE/App/usb_device.c \
@@ -57,11 +56,18 @@ Core/Src/system_stm32f1xx.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
-Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c  
+Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c  \
+Core/Src/enp_app.c
+
+C_SOURCES += $(wildcard Libs/enp/*.c)
 
 # ASM sources
 ASM_SOURCES =  \
 startup_stm32f103xb.s
+
+# CPP sources
+CXX_SOURCES =  \
+Core/Src/main.cpp
 
  
 #######################################
@@ -105,7 +111,8 @@ C_INCLUDES =  \
 -IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-Ilib/enp
 
 
 # compile gcc flags
@@ -121,6 +128,9 @@ endif
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
+CXXFLAGS=$(CFLAGS)
+CXXFLAGS+=-fno-rtti -fno-exceptions
+CXXFLAGS+=-std=c++14
 
 #######################################
 # LDFLAGS
@@ -131,7 +141,7 @@ LDSCRIPT = STM32F103C8Tx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-section
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
@@ -146,6 +156,9 @@ vpath %.c $(sort $(dir $(C_SOURCES)))
 # list of ASM program objects
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
+# list of CXX program objects
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CXX_SOURCES:.cpp=.o)))
+vpath %.cpp $(sort $(dir $(CXX_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
 	$(V1)echo "CC(debug) $(notdir $<)"
@@ -161,6 +174,10 @@ $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(V1)$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(V1)echo "========================================================"
 	$(V1)$(SZ) $@
+
+$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
+	$(V1)echo "CXX(debug) $(notdir $<)"
+	$(V1)$(CXX) -c $(CXXFLAGS) $(CC_DEBUG_OPTIMISATION) $< -o $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(V1)$(HEX) $< $@
