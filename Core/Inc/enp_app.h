@@ -7,8 +7,9 @@ extern __usrdata ENP_Data_t DEVICE_UsrData;
 
 // Identificators for nodes
 enum {
-  NODE_ROOT = 100, // ROOT
-  ENP_APP_NODENUM = 5
+  NODE_ROOT,
+  NODE_LED,
+  ENP_APP_NODENUM
 };
 
 // Identificators for variables

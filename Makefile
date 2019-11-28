@@ -57,7 +57,8 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c  \
-Core/Src/enp_app.c
+Core/Src/enp_app.c \
+Core/Src/led.c
 
 C_SOURCES += $(wildcard Libs/enp/*.c)
 
