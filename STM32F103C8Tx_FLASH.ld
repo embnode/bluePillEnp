@@ -62,7 +62,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 20K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 64K
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 64K - 1K
+USRPAR (rx)    : ORIGIN = 0x8007C00, LENGTH = 1K
 }
 
 /* Define output sections */
@@ -108,6 +109,12 @@ SECTIONS
     *(.ARM.exidx*)
     __exidx_end = .;
   } >FLASH
+
+  .usr_pars (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP (*(usr_pars))  /* system data block */
+  } > USRPAR
 
   .preinit_array     :
   {

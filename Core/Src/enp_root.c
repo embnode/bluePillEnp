@@ -1,5 +1,5 @@
 #include "enp_root.h"
-#include "flash_app.h"
+#include "flash.h"
 #include "stm32f1xx_hal.h"
 
 __usrdata ENP_Data_t DEVICE_UsrData; // Данные пользовательской конфигурации

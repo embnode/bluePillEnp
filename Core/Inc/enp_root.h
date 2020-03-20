@@ -2,7 +2,7 @@
 
 #include "enpapi.h"
 
-#define __usrdata __attribute__((section(".usr_const")))
+#define __usrdata __attribute__((section(".usr_pars")))
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,17 +10,17 @@ extern "C" {
 
 // Identificators for nodes
 enum {
-  NODE_ROOT,
-  NODE_LED,
-  ENP_NODENUM
+    NODE_ROOT,
+    NODE_LED,
+    ENP_NODENUM
 };
 
 // Identificators for variables
 enum ENP_APP_VAR {
-  ENP_ROOT_VAR_ERROR,  // error code
-  ENP_ROOT_VAR_DEV_ID, // device id
-  ENP_ROOT_VAR_TIME,   // up time
-  ENP_ROOT_VAR_NUM
+    ENP_ROOT_VAR_ERROR, // error code
+    ENP_ROOT_VAR_DEV_ID, // device id
+    ENP_ROOT_VAR_TIME, // up time
+    ENP_ROOT_VAR_NUM
 };
 
 // Atttributes of variables
