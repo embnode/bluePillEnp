@@ -8,8 +8,8 @@ Blue pill is popular board with STMF103 microcontroller.
 Project use gcc-arm-none-eabi compiler.
 You can download it [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) 
 
-build:
+build:  
 make -j GCC_PATH="path to arm-gcc-none-eabi/bin" TARGET = bluePill_ENP
 
-if your compiller was added in the path:
+if your compiller was added in the path:  
 make -j TARGET = bluePill_ENP
