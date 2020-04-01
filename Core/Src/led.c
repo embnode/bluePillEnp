@@ -1,6 +1,6 @@
 #include "led.h"
 #include "stdint.h"
-#include "enpprot.h"
+#include "enProt.h"
 #include "stm32f1xx_hal.h"
 #include "enp_root.h"
 
@@ -28,12 +28,12 @@ static const ENP_Attr_t attr[LED_VAR_NUM] = {
 // Nodelist for led configuration
 const ENP_Node_t LED_NodeList[] = {
     {"LED", NODE_LED, NODE_ROOT, LED_VAR_NUM, attr,
-     _varGet, _varSet, ENP_VarGetAttr, ENP_NodeName}
+     _varGet, _varSet}
 };
 
 void LED_Init() {
-  uint16_t nodeNum = API_GET_NODE_NUM(LED_NodeList);
-  ENP_InsertNode(LED_NodeList, nodeNum); // Добавляем узел
+  uint16_t nodeNum = GET_NODES_NUM(LED_NodeList);
+  ENP_InsertNodes(LED_NodeList, nodeNum); // Добавляем узел
 }
 
 void LED_Proc() {
