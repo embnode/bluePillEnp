@@ -28,7 +28,7 @@ static uint16_t _varGet(uint16_t, uint16_t, void*);
 static uint16_t _varSet(uint16_t, uint16_t, void*);
 
 static const ENP_Node_t rootNodeList[] = {
-    { "ENP_Demo", NODE_ROOT, NODE_ROOT, ROOT_VAR_NUM, attr,
+    { "BluePill", NODE_ROOT, NODE_ROOT, ROOT_VAR_NUM, attr,
         _varGet, _varSet },
 };
 
@@ -74,9 +74,6 @@ uint16_t _varSet(uint16_t nodeid, uint16_t varid, void* value)
             switch (varid) {
             case ROOT_VAR_ERROR:
                 DEVICE_Error = *(uint32_t*)value;
-                break;
-            case ROOT_VAR_DEV_ID:
-                // P_Pars.DevId = *(uint32_t *)value; // TODO
                 break;
             default:
                 return ENP_ERROR_VARID;

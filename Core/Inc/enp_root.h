@@ -8,6 +8,7 @@
 extern "C" {
 #endif
 
+#define DEVICE_ID 1
 // Identificators for nodes
 enum {
     NODE_ROOT,

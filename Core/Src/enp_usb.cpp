@@ -1,6 +1,7 @@
 #include "enp_usb.h"
 #include "enpHelper.h"
 #include "usbd_cdc_if.h"
+#include "enp_root.h"
 
 // Object for enp protocol
 ENP_Handle_t hEnpUSB;
@@ -31,5 +32,5 @@ static int TxFunc(const void* s, int n)
 
 void ENPUSB_Init()
 {
-    ENP_InitHandle(&hEnpUSB, 1, 2, TxFunc);
+    ENP_InitHandle(&hEnpUSB, DEVICE_ID, DEVICE_ID, TxFunc);
 }
