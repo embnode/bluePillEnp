@@ -1,46 +1,36 @@
 #include "enp_usb.h"
-#include "enpapi.h"
-#include "staticBuffersTmpl.h"
+#include "enpHelper.h"
 #include "usbd_cdc_if.h"
+#include "enp_root.h"
 
 // Object for enp protocol
 ENP_Handle_t hEnpUSB;
 
-staticBuffersTmpl::RingBuff<uint8_t, 256> usbBuff;
+bool isFrameParsed = false;
 
 void ENPUSB_readUsbBuff(uint8_t* buf, uint16_t len)
 {
-    int i = 0;
-    while (len) {
-        usbBuff.put(buf[i]);
-        i++;
-        len--;
-    }
+    // Parse enp
+    isFrameParsed = ENP_ParseFrame(&hEnpUSB, buf, len);
 }
 
-// Эта задача обслуживает обмен с конфигуратором
+// ENP protocol task
 void ENPUSB_Proc(void)
 {
-    ENP_Proc(&hEnpUSB);
-}
-
-static int usb_getC(void)
-{
-    int ret = -1;
-    if (usbBuff.size()) {
-        ret = usbBuff.get();
-        usbBuff.pop();
+    if(isFrameParsed){
+        ENP_AnswerProc(&hEnpUSB);
+        isFrameParsed = false;
     }
-    return ret;
 }
 
-static int usb_putN(const char* s, int n)
+static int TxFunc(const void* s, int n)
 {
-    CDC_Transmit_FS((uint8_t*)s, n);
+    uint8_t* buff = (uint8_t*)s;
+    CDC_Transmit_FS(buff, n);
     return n;
 }
 
 void ENPUSB_Init()
 {
-    ENP_InitHandle(&hEnpUSB, 1, 2, usb_getC, usb_putN);
+    ENP_InitHandle(&hEnpUSB, DEVICE_ID, DEVICE_ID, TxFunc);
 }
